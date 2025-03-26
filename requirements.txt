@@ -4,3 +4,4 @@ Flask-SQLAlchemy
 Werkzeug
 pandas
 openpyxl
+gunicorn==20.1.0
