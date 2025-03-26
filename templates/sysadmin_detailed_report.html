@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>System Admin Detailed Report</h2>
+
+<!-- Filter Form -->
+<form method="GET" action="{{ url_for('sysadmin_detailed_report') }}" class="form-inline mb-3">
+  <label for="start_date" class="mr-2">Start Date</label>
+  <input type="date" class="form-control mr-2" name="start_date" value="{{ start_date_str }}">
+
+  <label for="end_date" class="mr-2">End Date</label>
+  <input type="date" class="form-control mr-2" name="end_date" value="{{ end_date_str }}">
+
+  <label for="coach_id" class="mr-2">Coach</label>
+  <select name="coach_id" class="form-control mr-2">
+    <option value="">-- All Coaches --</option>
+    {% for c in coaches %}
+      <option value="{{ c.id }}"
+        {% if coach_id == c.id %}selected{% endif %}>
+        {{ c.full_name }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <label for="branch" class="mr-2">Branch</label>
+  <input type="text" class="form-control mr-2" name="branch" placeholder="Enter branch" value="{{ branch }}">
+
+  <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<!-- Export to Excel -->
+<a href="?start_date={{ start_date_str }}&end_date={{ end_date_str }}&coach_id={{ coach_id }}&branch={{ branch }}&export=excel"
+   class="btn btn-success mb-3">
+  Export Excel
+</a>
+
+<!-- Data Table -->
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th>Date</th>
+      <th>Player Name</th>
+      <th>Branch</th>
+      <th>Coach</th>
+      <th>Paid/Unpaid</th>
+      <th>Cost/Session</th>
+      <th>Payment Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in data_rows %}
+    <tr>
+      <td>{{ row.attendance_date }}</td>
+      <td>{{ row.player_name }}</td>
+      <td>{{ row.player_branch }}</td>
+      <td>{{ row.coach_name }}</td>
+      <td>{{ row.paid_status }}</td>
+      <td>
+        {% if row.cost_per_session > 0 %}
+          {{ row.cost_per_session }}
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>{{ row.payment_number }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="7">No records found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

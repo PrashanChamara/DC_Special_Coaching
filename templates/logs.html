@@ -1,0 +1,43 @@
+<!-- templates/logs.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Action Logs</h2>
+<form method="GET" action="{{ url_for('sysadmin_logs') }}" class="form-inline mb-3">
+  <label class="mr-2" for="start_date">Start Date</label>
+  <input type="date" name="start_date" class="form-control mr-2" value="{{ start_date_str }}">
+  <label class="mr-2" for="end_date">End Date</label>
+  <input type="date" name="end_date" class="form-control mr-2" value="{{ end_date_str }}">
+  <label class="mr-2" for="model">Model</label>
+  <input type="text" name="model" class="form-control mr-2" placeholder="e.g. Player" value="{{ model_filter }}">
+  <button type="submit" class="btn btn-primary">Filter</button>
+  <a href="?start_date={{ start_date_str }}&end_date={{ end_date_str }}&model={{ model_filter }}&export=excel" class="btn btn-success ml-2">Export Excel</a>
+</form>
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th>Date</th>
+      <th>User ID</th>
+      <th>Action</th>
+      <th>Model</th>
+      <th>Record ID</th>
+      <th>Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for log in logs %}
+    <tr>
+      <td>{{ log.timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+      <td>{{ log.user_id }}</td>
+      <td>{{ log.action }}</td>
+      <td>{{ log.model_name }}</td>
+      <td>{{ log.record_id }}</td>
+      <td>{{ log.details }}</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6">No logs found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

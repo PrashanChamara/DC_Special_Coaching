@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Player: {{ player.full_name }}</h2>
+
+<!-- Display the player's photo if available -->
+{% if player.profile_photo %}
+  <img src="{{ url_for('static', filename=player.profile_photo.split('static/')[-1]) }}"
+       alt="{{ player.full_name }}"
+       class="img-thumbnail mb-3"
+       width="200">
+{% endif %}
+
+<p>Email: {{ player.email }}</p>
+<p>Branch: {{ player.branch }}</p>
+<p>Squad: {{ player.assigned_squad }}</p>
+{% if player.date_of_birth %}
+  <p>Date of Birth: {{ player.date_of_birth }}</p>
+{% endif %}
+<p>Key Features: {{ player.key_features }}</p>
+
+<hr>
+
+<h3>Summary</h3>
+<ul>
+  <li>Total Paid Classes: {{ total_paid }}</li>
+  <li>Used Classes: {{ total_used }}</li>
+  <li>Remaining: {{ remaining }}</li>
+  <li>Unpaid: {{ unpaid }}</li>
+</ul>
+
+<!-- A doughnut chart using Chart.js to visualize Used, Remaining, Unpaid -->
+<div class="mt-4" style="max-width: 400px;">
+  <canvas id="summaryChart"></canvas>
+</div>
+
+<!-- Include Chart.js (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Build a doughnut chart for Used, Remaining, and Unpaid
+  var ctx = document.getElementById('summaryChart').getContext('2d');
+  var summaryChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ["Used", "Remaining", "Unpaid"],
+      datasets: [{
+        data: [
+          {{ total_used }},
+          {{ remaining }},
+          {{ unpaid }}
+        ],
+        backgroundColor: [
+          'rgba(40,167,69,0.6)',   // Used: green
+          'rgba(108,117,125,0.6)',// Remaining: gray
+          'rgba(255,193,7,0.6)'   // Unpaid: yellow
+        ],
+        borderColor: [
+          'rgba(40,167,69,1)',
+          'rgba(108,117,125,1)',
+          'rgba(255,193,7,1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+</script>
+
+<hr>
+
+<!-- Date filters for Payments & Attendance -->
+<form method="GET" action="{{ url_for('admin_player_detail', player_id=player.id) }}" class="form-inline mb-3">
+  <label for="start_date" class="mr-2">Start Date</label>
+  <input type="date" class="form-control mr-2" id="start_date" name="start_date" value="{{ start_date_str }}">
+
+  <label for="end_date" class="mr-2">End Date</label>
+  <input type="date" class="form-control mr-2" id="end_date" name="end_date" value="{{ end_date_str }}">
+
+  <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<h3>Payments</h3>
+<!-- Export button for payments -->
+<a href="{{ url_for('admin_player_detail', player_id=player.id, start_date=start_date_str, end_date=end_date_str, export='payments') }}"
+   class="btn btn-success mb-2">
+  Export Payments to Excel
+</a>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Payment Number</th>
+      <th>Payment Date</th>
+      <th>Total Paid Classes</th>
+      <th>Classes Used</th>
+      <th>Payment Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for pay in payment_list %}
+    <tr>
+      <td>{{ pay.payment_number }}</td>
+      <td>{{ pay.payment_date }}</td>
+      <td>{{ pay.total_paid_classes }}</td>
+      <td>{{ pay.classes_used }}</td>
+      <td>{{ pay.payment_amount }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="5">No payments found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<hr>
+
+<h3>Attendance</h3>
+<!-- Export button for attendance -->
+<a href="{{ url_for('admin_player_detail', player_id=player.id, start_date=start_date_str, end_date=end_date_str, export='attendance') }}"
+   class="btn btn-success mb-2">
+  Export Attendance to Excel
+</a>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for att in attendance_list %}
+    <tr>
+      <td>{{ att.attendance_date }}</td>
+      <td>{{ att.attendance_type }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="2">No attendance records.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

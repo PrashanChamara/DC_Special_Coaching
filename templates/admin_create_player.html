@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create Player (Admin)</h2>
+<form method="POST" action="{{ url_for('admin_create_player') }}" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="full_name">Player Full Name</label>
+    <input type="text" class="form-control" name="full_name" required>
+  </div>
+  <div class="form-group">
+    <label for="email">Player Email Address</label>
+    <input type="email" class="form-control" name="email">
+  </div>
+  <div class="form-group">
+    <label for="branch">Assigned Branch</label>
+    <input type="text" class="form-control" name="branch">
+  </div>
+  <div class="form-group">
+    <label for="assigned_squad">Assigned Squad</label>
+    <input type="text" class="form-control" name="assigned_squad">
+  </div>
+  <div class="form-group">
+    <label for="date_of_birth">Date of Birth</label>
+    <input type="date" class="form-control" name="date_of_birth">
+  </div>
+  <div class="form-group">
+    <label for="key_features">Key Features</label>
+    <textarea class="form-control" name="key_features"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="coach_id">Assign Coach</label>
+    <select class="form-control" name="coach_id" required>
+      {% for coach in coaches %}
+        <option value="{{ coach.id }}">{{ coach.full_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="profile_photo">Profile Photo</label>
+    <input type="file" class="form-control-file" name="profile_photo">
+  </div>
+  <button type="submit" class="btn btn-primary">Create Player</button>
+</form>
+{% endblock %}

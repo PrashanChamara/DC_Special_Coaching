@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>System Administrator Dashboard</h2>
+
+<!-- 
+  We will display 5 cards in two rows for better layout:
+    1) Total Collections
+    2) Total Paid
+    3) Paid Sessions (Used)
+    4) Unpaid Sessions
+    5) Remaining Sessions
+-->
+
+<div class="row">
+  <!-- Total Collections -->
+  <div class="col-md-4">
+    <div class="card text-white bg-info mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Total Collections</h5>
+        <p class="card-text display-4">{{ collections }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Paid Classes -->
+  <div class="col-md-4">
+    <div class="card text-white bg-primary mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Total Paid</h5>
+        <p class="card-text display-4">{{ paid_total }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paid Sessions (Used) -->
+  <div class="col-md-4">
+    <div class="card text-white bg-success mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Paid Sessions (Used)</h5>
+        <p class="card-text display-4">{{ paid_sessions }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <!-- Unpaid Sessions -->
+  <div class="col-md-6">
+    <div class="card text-white bg-warning mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Unpaid Sessions</h5>
+        <p class="card-text display-4">{{ unpaid_sessions }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Remaining Sessions -->
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Remaining Sessions</h5>
+        <p class="card-text display-4">{{ remaining_sessions }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <p>Total Admins: {{ admin_count }}</p>
+  <a href="{{ url_for('create_admin') }}" class="btn btn-primary">Create Admin</a>
+  <a href="{{ url_for('sysadmin_detailed_report') }}" class="btn btn-secondary">Detailed Report</a>
+  <!-- New Buttons: Logs and Edit a Record -->
+  <a href="{{ url_for('sysadmin_logs') }}" class="btn btn-info">Logs</a>
+  <a href="{{ url_for('manage_records') }}" class="btn btn-warning">Edit a Record</a>
+</div>
+
+<!-- Include Chart.js for the bar chart -->
+<canvas id="chartAdmins" width="400" height="200"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  /*
+    We only show 4 bars in the chart:
+      1) Total Paid
+      2) Paid Sessions (Used)
+      3) Remaining
+      4) Unpaid
+  */
+  var ctx = document.getElementById('chartAdmins').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Total Paid', 'Used', 'Remaining', 'Unpaid'],
+      datasets: [{
+        label: 'Current Totals',
+        data: [
+          {{ paid_total }},        // total paid classes
+          {{ paid_sessions }},     // used classes
+          {{ remaining_sessions }},// leftover classes
+          {{ unpaid_sessions }}    // over-limit classes
+        ],
+        backgroundColor: [
+          'rgba(0,123,255,0.6)',   // total paid: blue
+          'rgba(40,167,69,0.6)',  // used: green
+          'rgba(108,117,125,0.6)',// remaining: gray
+          'rgba(255,193,7,0.6)'   // unpaid: yellow
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}
