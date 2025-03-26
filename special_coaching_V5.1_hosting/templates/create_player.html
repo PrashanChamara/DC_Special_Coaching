@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create Player</h2>
+<form method="POST" action="{{ url_for('create_player') }}" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="full_name">Player Full Name</label>
+    <input type="text" class="form-control" name="full_name" placeholder="Enter full name" required>
+  </div>
+  <div class="form-group">
+    <label for="email">Player Email Address</label>
+    <input type="email" class="form-control" name="email" placeholder="Enter email" required>
+  </div>
+  <div class="form-group">
+    <label for="branch">Assigned Branch</label>
+    <input type="text" class="form-control" name="branch" placeholder="Enter branch" required>
+  </div>
+  <div class="form-group">
+    <label for="assigned_squad">Assigned Squad</label>
+    <input type="text" class="form-control" name="assigned_squad" placeholder="Enter squad" required>
+  </div>
+  <div class="form-group">
+    <label for="date_of_birth">Date of Birth</label>
+    <input type="date" class="form-control" name="date_of_birth" required>
+  </div>
+  <div class="form-group">
+    <label for="key_features">Key Features</label>
+    <textarea class="form-control" name="key_features" placeholder="e.g., Left hand batsman and fast bowler" required></textarea>
+  </div>
+  <div class="form-group">
+    <label for="profile_photo">Profile Photo</label>
+    <input type="file" class="form-control-file" name="profile_photo">
+  </div>
+  <button type="submit" class="btn btn-primary">Create Player</button>
+</form>
+{% endblock %}

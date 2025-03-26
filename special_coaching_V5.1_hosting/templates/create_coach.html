@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Create Coach</h2>
+<form method="POST" action="{{ url_for('create_coach') }}" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="username">Coach Username</label>
+    <input type="text" class="form-control" name="username" placeholder="Enter username" required>
+  </div>
+  <div class="form-group">
+    <label for="password">Coach Password</label>
+    <input type="password" class="form-control" name="password" placeholder="Enter password" required>
+  </div>
+  <div class="form-group">
+    <label for="full_name">Full Name</label>
+    <input type="text" class="form-control" name="full_name" placeholder="Enter full name" required>
+  </div>
+  <div class="form-group">
+    <label for="branch">Assigned Branch</label>
+    <input type="text" class="form-control" name="branch" placeholder="Enter branch" required>
+  </div>
+  <div class="form-group">
+    <label for="email">Email Address</label>
+    <input type="email" class="form-control" name="email" placeholder="Enter email" required>
+  </div>
+  <div class="form-group">
+    <label for="experience">Coach's Experience</label>
+    <input type="text" class="form-control" name="experience" placeholder="Enter experience" required>
+  </div>
+  <div class="form-group">
+    <label for="qualification">Coach's Highest Qualification</label>
+    <input type="text" class="form-control" name="qualification" placeholder="Enter qualification" required>
+  </div>
+  <div class="form-group">
+    <label for="profile_photo">Profile Photo</label>
+    <input type="file" class="form-control-file" name="profile_photo">
+  </div>
+  <div class="form-group">
+    <label for="assigned_admin_id">Assign to Admin Officer</label>
+    <select class="form-control" name="assigned_admin_id">
+      <option value="">-- Optional --</option>
+      {% for admin in admins %}
+        <option value="{{ admin.id }}">{{ admin.full_name }} ({{ admin.username }})</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Create Coach</button>
+</form>
+{% endblock %}

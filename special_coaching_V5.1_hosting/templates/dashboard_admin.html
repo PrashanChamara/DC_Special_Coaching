@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<!-- Cards for quick stats -->
+<div class="row">
+  <div class="col-md-3">
+    <div class="card text-white bg-info mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Coaches</h5>
+        <p class="card-text display-4">{{ coaches_count }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-success mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Players</h5>
+        <p class="card-text display-4">{{ players_count }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-warning mb-3">
+      <div class="card-body">
+        <h5 class="card-title">This Month's Payments</h5>
+        <p class="card-text display-4">{{ monthly_collections }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Last Month's Payments</h5>
+        <p class="card-text display-4">{{ last_month_collections }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Links to admin actions -->
+<div class="list-group mb-4">
+  <a href="{{ url_for('create_coach') }}" class="list-group-item list-group-item-action">Create Coach</a>
+  <a href="{{ url_for('admin_create_player') }}" class="list-group-item list-group-item-action">Create Player</a>
+  <a href="{{ url_for('record_payment') }}" class="list-group-item list-group-item-action">Record Payment</a>
+  <a href="{{ url_for('coach_report') }}" class="list-group-item list-group-item-action">Coach Report</a>
+</div>
+
+<!-- List of existing coaches -->
+<h3>Coaches List</h3>
+<ul class="list-group">
+  {% for coach in coaches %}
+    <li class="list-group-item">
+      {{ coach.full_name }} ({{ coach.username }}) - {{ coach.branch }}
+    </li>
+  {% else %}
+    <li class="list-group-item">No coaches available.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,20 @@
+<!-- templates/edit_attendance.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Attendance</h2>
+<form method="POST" action="{{ url_for('edit_attendance', attendance_id=attendance.id) }}">
+  <div class="form-group">
+    <label for="attendance_date">Attendance Date (YYYY-MM-DD HH:MM:SS)</label>
+    <input type="text" name="attendance_date" class="form-control" value="{{ attendance.attendance_date.strftime('%Y-%m-%d %H:%M:%S') }}" required>
+  </div>
+  <div class="form-group">
+    <label for="attendance_type">Attendance Type</label>
+    <select name="attendance_type" class="form-control">
+      <option value="normal" {% if attendance.attendance_type=='normal' %}selected{% endif %}>Normal</option>
+      <option value="free_extra" {% if attendance.attendance_type=='free_extra' %}selected{% endif %}>Free Extra</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Update Attendance</button>
+  <a href="{{ url_for('manage_records', record_type='Attendance') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
